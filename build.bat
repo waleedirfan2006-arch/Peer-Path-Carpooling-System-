@@ -3,7 +3,7 @@ echo ===================================================
 echo   Compiling PeerPath Carpooling System (C++)
 echo ===================================================
 
-g++ -std=c++17 main.cpp Student.cpp Ride.cpp CarpoolSystem.cpp -o peerpath.exe
+g++ -std=c++17 main.cpp Student.cpp Ride.cpp CarpoolSystem.cpp CampusGraph.cpp -o peerpath.exe
 
 if %ERRORLEVEL% EQU 0 (
     echo.

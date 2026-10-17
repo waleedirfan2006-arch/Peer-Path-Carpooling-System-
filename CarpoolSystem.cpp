@@ -110,7 +110,7 @@ void CarpoolSystem::showMainMenu() const {
     cout << "  [7] Request to Book a Seat (Passenger Mode)\n";
     cout << "  [8] View My Booking Requests (Passenger Mode)\n";
     cout << "  [9] View & Process Booking Requests (Driver Queue - DSA FIFO Queue)\n";
-    cout << "  [10] Campus Transit Routes (DSA Graph Preview)\n";
+    cout << "  [10] Campus Route Network (DSA Graph, BFS & Dijkstra)\n";
     cout << "  [11] View System Summary & Statistics\n";
     if (loggedInStudentID != "") {
         cout << "  [12] Logout Current User\n";
@@ -599,21 +599,99 @@ void CarpoolSystem::processDriverQueue() {
     pauseScreen();
 }
 
-// Display campus transit network preview (Graph DSA concept)
-void CarpoolSystem::showRoutePreview() const {
-    showHeader("CAMPUS TRANSIT ROUTES (DSA GRAPH PREVIEW)");
-    cout << "  In Phase 2, PeerPath will model Karachi transit points as a Graph:\n\n";
-    cout << "  [Node 0] NED Main Campus (University Road)\n";
-    cout << "     |-- 2.5 km --> [Node 1] Johar Chowrangi\n";
-    cout << "     |-- 3.0 km --> [Node 2] Safari Park\n";
-    cout << "     |-- 4.8 km --> [Node 3] NIPA Chowrangi\n";
-    cout << "     |-- 6.5 km --> [Node 4] Gulshan Block 13D\n";
-    cout << "     |-- 8.0 km --> [Node 5] Millennium Mall\n";
-    cout << "     |-- 12.0 km -> [Node 6] Malir Cantt Checkpost\n";
-    cout << "     |-- 15.5 km -> [Node 7] Saddar Regal Chowk\n\n";
-    cout << "  Dijkstra's Algorithm will compute the shortest commute path to NED,\n";
-    cout << "  and check if an offered ride passes through a student's pickup stop!\n";
-    pauseScreen();
+// Campus Route Network Submenu (DSA Graph, BFS, and Dijkstra)
+void CarpoolSystem::manageCampusRouteNetwork() {
+    int choice = -1;
+    while (choice != 0) {
+        showHeader("CAMPUS ROUTE NETWORK (GRAPH DSA)");
+        cout << "  [1] Find Shortest Route (Dijkstra's Algorithm)\n";
+        cout << "  [2] Check Route Reachability / Connectivity (BFS Algorithm)\n";
+        cout << "  [3] View All Campus Transit Locations & Roads (Adjacency List)\n";
+        cout << "  [0] Return to Main Menu\n";
+        cout << "============================================================\n";
+        cout << "Enter your choice: ";
+
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "\n[-] Invalid input. Please enter a number.\n";
+            pauseScreen();
+            continue;
+        }
+        cin.ignore(10000, '\n');
+
+        if (choice == 1) {
+            showHeader("FIND SHORTEST ROUTE (DIJKSTRA'S ALGORITHM)");
+            campusGraph.printLocationMenu();
+
+            int startIdx = -1, destIdx = -1;
+            cout << "\nEnter starting location number [0-" << campusGraph.getLocationCount() - 1 << "]: ";
+            if (!(cin >> startIdx) || !campusGraph.isValidIndex(startIdx)) {
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "\n[-] Invalid starting location selection.\n";
+                pauseScreen();
+                continue;
+            }
+
+            cout << "Enter destination location number [0-" << campusGraph.getLocationCount() - 1 << "]: ";
+            if (!(cin >> destIdx) || !campusGraph.isValidIndex(destIdx)) {
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "\n[-] Invalid destination location selection.\n";
+                pauseScreen();
+                continue;
+            }
+            cin.ignore(10000, '\n');
+
+            string startLoc = campusGraph.getLocationByIndex(startIdx);
+            string destLoc = campusGraph.getLocationByIndex(destIdx);
+
+            campusGraph.findShortestPathDijkstra(startLoc, destLoc);
+            pauseScreen();
+
+        } else if (choice == 2) {
+            showHeader("CHECK ROUTE REACHABILITY (BFS ALGORITHM)");
+            campusGraph.printLocationMenu();
+
+            int startIdx = -1, destIdx = -1;
+            cout << "\nEnter starting location number [0-" << campusGraph.getLocationCount() - 1 << "]: ";
+            if (!(cin >> startIdx) || !campusGraph.isValidIndex(startIdx)) {
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "\n[-] Invalid starting location selection.\n";
+                pauseScreen();
+                continue;
+            }
+
+            cout << "Enter destination location number [0-" << campusGraph.getLocationCount() - 1 << "]: ";
+            if (!(cin >> destIdx) || !campusGraph.isValidIndex(destIdx)) {
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "\n[-] Invalid destination location selection.\n";
+                pauseScreen();
+                continue;
+            }
+            cin.ignore(10000, '\n');
+
+            string startLoc = campusGraph.getLocationByIndex(startIdx);
+            string destLoc = campusGraph.getLocationByIndex(destIdx);
+
+            campusGraph.checkReachabilityBFS(startLoc, destLoc);
+            pauseScreen();
+
+        } else if (choice == 3) {
+            campusGraph.displayNetwork();
+            pauseScreen();
+
+        } else if (choice == 0) {
+            cout << "\nReturning to Main Menu...\n";
+            break;
+        } else {
+            cout << "\n[-] Invalid option. Please try again.\n";
+            pauseScreen();
+        }
+    }
 }
 
 // Display system statistics
@@ -674,7 +752,7 @@ void CarpoolSystem::run() {
             case 7: requestRideBooking(); break;
             case 8: viewMyBookings(); break;
             case 9: processDriverQueue(); break;
-            case 10: showRoutePreview(); break;
+            case 10: manageCampusRouteNetwork(); break;
             case 11: showSystemStats(); break;
             case 12:
                 if (loggedInStudentID != "") logoutStudent();

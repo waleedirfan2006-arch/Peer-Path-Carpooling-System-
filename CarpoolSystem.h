@@ -8,6 +8,7 @@
 #include "Student.h"
 #include "Ride.h"
 #include "BookingRequest.h"
+#include "CampusGraph.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ private:
     vector<Student> students;          // Dynamic list of registered students and faculty
     vector<Ride> rides;                // Dynamic list of all carpool rides
     vector<BookingRequest> allRequests;// Master list of all booking requests
+    CampusGraph campusGraph;           // Campus transit network graph (DSA Graph, BFS & Dijkstra)
     int nextRideID;                    // Next unique ride ID
     int nextRequestID;                 // Next unique booking request ID
     string loggedInStudentID;          // ID of logged in user (empty if logged out)
@@ -48,7 +50,7 @@ public:
     void requestRideBooking();         // Passenger creates a pending booking request
     void processDriverQueue();         // Driver processes their FIFO pending request queue
     void viewMyBookings() const;       // Passenger views their booking requests
-    void showRoutePreview() const;
+    void manageCampusRouteNetwork();   // Campus Route Network submenu (Dijkstra, BFS, Map)
     void showSystemStats() const;
 };
 
