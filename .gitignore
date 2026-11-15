@@ -6,3 +6,4 @@
 # Temporary / editor files
 .vscode/
 .idea/
+compile_commands.json

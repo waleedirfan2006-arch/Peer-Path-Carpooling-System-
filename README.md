@@ -127,7 +127,7 @@ Double click or run from CMD / PowerShell:
 
 #### Option B: Direct g++ Command Line
 ```bash
-g++ -std=c++17 main.cpp Student.cpp Ride.cpp CarpoolSystem.cpp CampusGraph.cpp -o peerpath.exe
+g++ -std=c++17 main.cpp CarpoolSystem.cpp CampusGraph.cpp -o peerpath.exe
 ```
 
 ### Running the Application

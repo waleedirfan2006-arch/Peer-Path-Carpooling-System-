@@ -5,9 +5,7 @@
 #include <vector>
 #include <string>
 #include <queue>
-#include "Student.h"
-#include "Ride.h"
-#include "BookingRequest.h"
+#include "Models.h"
 #include "CampusGraph.h"
 
 using namespace std;
